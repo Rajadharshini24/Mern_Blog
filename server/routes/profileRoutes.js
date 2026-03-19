@@ -7,13 +7,19 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 
-// Multer setup for profile images
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) =>
-    cb(null, `${req.user.id}${path.extname(file.originalname)}`),
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "profile_images",
+    allowed_formats: ["jpg", "png", "jpeg"],
+    public_id: (req, file) => `user_${req.user.id}`,
+  },
 });
-const upload = multer({ storage });
+
+
 
 // GET logged-in user info
 router.get("/me", verifyToken, async (req, res) => {
@@ -27,7 +33,7 @@ router.get("/me", verifyToken, async (req, res) => {
   }
 });
 
-// UPDATE profile (name, email, profile image)
+const upload = multer({ storage });
 router.put(
   "/me",
   verifyToken,
@@ -54,7 +60,7 @@ router.put(
       console.error(err);
       res.status(500).json({ message: err.message });
     }
-  }
+  },
 );
 
 // GET all blogs by logged-in user
