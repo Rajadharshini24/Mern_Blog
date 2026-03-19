@@ -58,17 +58,18 @@ router.put("/me", verifyToken, upload.single("profileImage"), async (req, res) =
 // GET all blogs by logged-in user
 router.get("/blogs/me", verifyToken, async (req, res) => {
   try {
+    if (!req.user || !req.user.id) return res.status(401).json({ message: "Unauthorized" });
+
     const blogs = await Blog.find({ author: req.user.id })
-      .populate("author", "name profileImage")
+      .populate({ path: "author", select: "name profileImage", strictPopulate: false })
       .sort({ createdAt: -1 });
 
     res.status(200).json({ blogs });
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching user blogs:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
-
 // GET liked blogs by logged-in user
 router.get("/blogs/liked/me", verifyToken, async (req, res) => {
   try {
