@@ -5,8 +5,6 @@ import { useState } from "react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  
-  console.log("Navbar user:", user);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -49,19 +47,25 @@ const Navbar = () => {
                 ✍️ Write
               </Link>
 
-              <Link to="/profile" title={user.name}>
-  <img
-    src={
-      user?.profileImage
-        ? user.profileImage // ✅ use full URL from backend
-        : `https://ui-avatars.com/api/?name=${user.name}` // fallback avatar
-    }
-    className="w-9 h-9 rounded-full object-cover"
-    onError={(e) => {
-      e.target.src = `https://ui-avatars.com/api/?name=${user.name}`;
-    }}
-  />
-</Link>
+              {/* Profile avatar */}
+              <Link to="/profile" title={user.name} className="flex items-center">
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt={user.name}
+                    className="w-9 h-9 rounded-full object-cover"
+                    onError={(e) => {
+                      e.target.src = `https://ui-avatars.com/api/?name=${user.name}`;
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${user.name}`}
+                    alt={user.name}
+                    className="w-9 h-9 rounded-full object-cover"
+                  />
+                )}
+              </Link>
 
               <button
                 onClick={handleLogout}
@@ -89,7 +93,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* MOBILE BUTTON */}
+        {/* MOBILE MENU BUTTON */}
         <button
           onClick={() => setOpen(!open)}
           className="md:hidden text-2xl"
@@ -112,8 +116,25 @@ const Navbar = () => {
                 ✍️ Write
               </Link>
 
-              <Link to="/profile" className="block text-gray-700">
-                Profile
+              {/* Mobile profile */}
+              <Link to="/profile" className="flex items-center gap-2 text-gray-700">
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full object-cover"
+                    onError={(e) => {
+                      e.target.src = `https://ui-avatars.com/api/?name=${user.name}`;
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${user.name}`}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                )}
+                <span>{user.name}</span>
               </Link>
 
               <button
