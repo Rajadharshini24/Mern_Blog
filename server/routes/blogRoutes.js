@@ -35,6 +35,6 @@ router.put("/:id", verifyToken, upload.single("image"), updateBlog);
 router.delete("/:id", verifyToken, deleteBlog);
 
 // Like / Unlike blog
-router.post("/:id/like", verifyToken, likeBlog);
+router.post("like/:id", verifyToken, likeBlog);
 
 module.exports = router;

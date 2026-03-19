@@ -1,14 +1,14 @@
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary"); // your Cloudinary config
 const multer = require("multer");
-const path = require("path");
 
-// Storage config for profile images
-const profileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // folder where profile images will be saved
-  },
-  filename: (req, file, cb) => {
-    // Use user ID + original extension
-    cb(null, `${req.user.id}${path.extname(file.originalname)}`);
+// Storage config for profile images in Cloudinary
+const profileStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "profile_images", // Cloudinary folder
+    format: async (req, file) => "png", // optional: convert all images to png
+    public_id: (req, file) => req.user.id, // use user ID as filename
   },
 });
 
