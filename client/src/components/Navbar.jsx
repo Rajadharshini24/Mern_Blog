@@ -49,15 +49,18 @@ const Navbar = () => {
               </Link>
 
               <Link to="/profile" title={user.name}>
-                <img
-                  src={`http://localhost:5000${user?.user?.profileImage}`}
-                  className="w-9 h-9 rounded-full object-cover"
-                  onError={(e) => {
-                    e.target.src =
-                      "https://ui-avatars.com/api/?name=" + user.name;
-                  }}
-                />
-              </Link>
+  <img
+    src={
+      user?.profileImage
+        ? user.profileImage // ✅ use full URL from backend
+        : `https://ui-avatars.com/api/?name=${user.name}` // fallback avatar
+    }
+    className="w-9 h-9 rounded-full object-cover"
+    onError={(e) => {
+      e.target.src = `https://ui-avatars.com/api/?name=${user.name}`;
+    }}
+  />
+</Link>
 
               <button
                 onClick={handleLogout}

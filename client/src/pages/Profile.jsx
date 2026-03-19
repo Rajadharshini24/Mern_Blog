@@ -90,9 +90,9 @@ const Profile = () => {
               <img
   src={
     formData.profileImage
-      ? URL.createObjectURL(formData.profileImage) // newly selected file
+      ? URL.createObjectURL(formData.profileImage) // preview selected file
       : user.profileImage
-      ? `http://localhost:5000${user.profileImage}` // existing uploaded image
+      ? user.profileImage // ✅ full Cloudinary/Render URL directly
       : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}` // fallback avatar
   }
   className="w-32 h-32 md:w-44 md:h-44 rounded-2xl object-cover border-4 border-white shadow-lg"
