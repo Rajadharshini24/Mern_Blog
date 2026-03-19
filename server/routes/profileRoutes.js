@@ -36,6 +36,10 @@ router.get("/me", verifyToken, async (req, res) => {
 
 // UPDATE logged-in user info (with profile image)
 router.put("/me", verifyToken, upload.single("profileImage"), async (req, res) => {
+  // ✅ Add these lines to debug
+  console.log("req.file:", req.file);  // this should log the Cloudinary file info
+  console.log("req.body:", req.body);  // this will show name, email, etc.
+
   try {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
