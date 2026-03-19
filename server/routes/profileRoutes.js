@@ -1,15 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const Blog = require("../models/Blog"); // ✅ import Blog
+const Blog = require("../models/Blog");
 const verifyToken = require("../middleware/authMiddleware");
-const path = require("path");
-const fs = require("fs");
 const multer = require("multer");
-
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 
+// ✅ Cloudinary storage for profile images
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -19,7 +17,9 @@ const storage = new CloudinaryStorage({
   },
 });
 
+const upload = multer({ storage });
 
+// ----------------- ROUTES -----------------
 
 // GET logged-in user info
 router.get("/me", verifyToken, async (req, res) => {
@@ -27,47 +27,33 @@ router.get("/me", verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // ✅ Prepend backend URL if using local uploads
-    if (user.profileImage && !user.profileImage.startsWith("http")) {
-      user.profileImage = process.env.BACKEND_URL + user.profileImage;
-    }
-
-    res.json({ user });
+    res.json({ user }); // profileImage is already Cloudinary URL
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-const upload = multer({ storage });
-router.put(
-  "/me",
-  verifyToken,
-  upload.single("profileImage"),
-  async (req, res) => {
-    try {
-      const user = await User.findById(req.user.id);
-      if (!user) return res.status(404).json({ message: "User not found" });
+// UPDATE logged-in user info (with profile image)
+router.put("/me", verifyToken, upload.single("profileImage"), async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-      if (req.body.name) user.name = req.body.name;
-      if (req.body.email) user.email = req.body.email;
+    if (req.body.name) user.name = req.body.name;
+    if (req.body.email) user.email = req.body.email;
 
-      if (req.file) {
-        if (user.profileImage) {
-          const oldImagePath = path.join(__dirname, "../", user.profileImage);
-          if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
-        }
-        user.profileImage = process.env.BACKEND_URL + `/uploads/${req.file.filename}`;
-      }
-
-      await user.save();
-      res.status(200).json({ message: "Profile updated", user });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: err.message });
+    if (req.file && req.file.path) {
+      user.profileImage = req.file.path; // Cloudinary URL
     }
-  },
-);
+
+    await user.save();
+    res.status(200).json({ message: "Profile updated", user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // GET all blogs by logged-in user
 router.get("/blogs/me", verifyToken, async (req, res) => {

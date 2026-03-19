@@ -34,8 +34,8 @@ const CreatePost = () => {
 formData.append("title", title);
 formData.append("content", content);
 formData.append("category", category);
-formData.append("tags", tagsArray);
-formData.append("image", image); // ✅ IMPORTANT
+formData.append("tags", JSON.stringify(tagsArray));
+if (image) formData.append("image", image);
 
 await createBlog(formData);
       toast.success("Post published! 🎉");
