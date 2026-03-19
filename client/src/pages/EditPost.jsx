@@ -65,32 +65,41 @@ const EditPost = () => {
   e.preventDefault();
 
   if (!title.trim() || !content.trim() || !category) {
-    toast.error("Please fill in all required fields");
+    toast.error("Please fill in all required fields"); // ✅ instant
     return;
   }
 
   setSubmitting(true);
+
+  // Show optimistic toast immediately
+  toast.info("Updating post... ✨");
+
   try {
-    const tagsArray = tags.split(",").map((t) => t.trim()).filter((t) => t);
+    const tagsArray = tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t);
 
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
     formData.append("category", category);
     formData.append("tags", tagsArray.join(","));
-    
-    // ✅ Append new image if selected
     if (newImage) formData.append("image", newImage);
 
+    // Await backend update
     const res = await updateBlog(id, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    // ✅ Update frontend state
+    // Update frontend state
     setImage(res.data.blog.image || null);
     setNewImage(null);
 
+    // ✅ Success toast
     toast.success("Post updated successfully ✨");
+
+    // Navigate after showing toast
     navigate(`/blog/${id}`);
   } catch (err) {
     console.error(err);
@@ -101,15 +110,19 @@ const EditPost = () => {
 };
 
   const handleDelete = async () => {
-    try {
-      await deleteBlog(id);
-      toast.success("Post deleted");
-      navigate("/");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Delete failed");
-    }
-    setShowDeleteModal(false);
-  };
+  // Optimistic toast first
+  toast.info("Deleting post...");
+
+  try {
+    await deleteBlog(id);
+    toast.success("Post deleted ✨");
+    navigate("/"); // navigate after success
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Delete failed");
+  }
+
+  setShowDeleteModal(false);
+};
 
   if (loading) return <Loader />;
 

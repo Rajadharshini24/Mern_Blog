@@ -51,22 +51,21 @@ const PostDetails = () => {
 
 
 
-  const handleLike = async () => {
-    if (!user) {
-      toast.error("Please login to like posts");
-      return;
-    }
-    setLikeLoading(true);
-    try {
-      const res = await likeBlog(id);
-      setLiked(!liked);
-      setLikesCount(res.data.likesCount);
-    } catch {
-      toast.error("Failed to update like");
-    } finally {
-      setLikeLoading(false);
-    }
-  };
+  const handleLike = async (id, liked, setLiked) => {
+  // Update UI immediately
+  setLiked(!liked);
+
+  // Show toast immediately
+  toast.success(!liked ? "Liked!" : "Unliked!");
+
+  try {
+    await likeBlog(id); // call backend
+  } catch (err) {
+    // Revert UI if API fails
+    setLiked(liked);
+    toast.error("Failed to update like");
+  }
+};
 
  const currentUserId = user?._id || user?.id || user?.user?._id;
 

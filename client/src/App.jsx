@@ -66,6 +66,10 @@ function App() {
           position="top-right"
           autoClose={3000}
           theme="light"
+          newestOnTop
+          closeOnClick
+          draggable
+          pauseOnHover={false}
         />
       </Router>
     </AuthProvider>
