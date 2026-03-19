@@ -33,7 +33,7 @@ const PostCard = ({ blog, currentUserId, onDelete }) => {
               blog.image
                 ? blog.image.startsWith("http")
                   ? blog.image
-                  : `http://localhost:5000${blog.image}`
+                  : `https://mern-blog-backend-wdq0.onrender.com${blog.image}`
                 : "https://source.unsplash.com/400x300/?technology"
             }
             alt=""

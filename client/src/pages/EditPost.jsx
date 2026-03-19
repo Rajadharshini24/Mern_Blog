@@ -142,7 +142,7 @@ const EditPost = () => {
         {/* IMAGE PREVIEW */}
         {(newImage || image) && (
   <img
-    src={newImage ? URL.createObjectURL(newImage) : `http://localhost:5000${image}`}
+    src={newImage ? URL.createObjectURL(newImage) : `https://mern-blog-backend-wdq0.onrender.com${image}`}
     alt="Blog"
     className="mb-4 w-full h-64 object-cover rounded-lg"
   />

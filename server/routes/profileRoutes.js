@@ -26,6 +26,12 @@ router.get("/me", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
+
+    // ✅ Prepend backend URL if using local uploads
+    if (user.profileImage && !user.profileImage.startsWith("http")) {
+      user.profileImage = process.env.BACKEND_URL + user.profileImage;
+    }
+
     res.json({ user });
   } catch (err) {
     console.error(err);
@@ -51,7 +57,7 @@ router.put(
           const oldImagePath = path.join(__dirname, "../", user.profileImage);
           if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
         }
-        user.profileImage = `/uploads/${req.file.filename}`;
+        user.profileImage = process.env.BACKEND_URL + `/uploads/${req.file.filename}`;
       }
 
       await user.save();

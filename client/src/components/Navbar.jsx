@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  
   console.log("Navbar user:", user);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);

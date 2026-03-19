@@ -133,7 +133,7 @@ const Home = () => {
                       <img
   src={
     blog.image
-      ? `http://localhost:5000${blog.image}`
+      ? `https://mern-blog-backend-wdq0.onrender.com${blog.image}`
       : "https://source.unsplash.com/400x250/?technology"
   }
   className="h-44 w-full object-cover"

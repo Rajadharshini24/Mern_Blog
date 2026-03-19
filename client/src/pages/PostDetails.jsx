@@ -118,7 +118,7 @@ const isAuthor = blog?.author?._id === currentUserId;
   {/* ✅ ADD IMAGE HERE */}
   {blog.image && (
     <img
-      src={`http://localhost:5000${blog.image}`}
+      src={`https://mern-blog-backend-wdq0.onrender.com${blog.image}`}
       className="w-full h-64 object-cover rounded-xl mb-6"
     />
   )}
