@@ -4,7 +4,10 @@ const mongoose=require("mongoose");
 require("dotenv").config();
 
 const app=express();
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
@@ -21,7 +24,7 @@ app.use('/api/comments',commentRoutes);
 app.use("/api/profile", profileRoutes);
 
 
-//db connection
+
 const connectDb=async()=>{
     try{
         await mongoose.connect(process.env.MONGO_URI);
