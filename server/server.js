@@ -9,7 +9,7 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const authRoutes=require("./routes/authRoutes");
 const blogRoutes=require("./routes/blogRoutes");
