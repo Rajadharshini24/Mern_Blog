@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://mern-blog-backend-wdq0.onrender.com" });
+const API = axios.create({ baseURL: "https://mern-blog-backend-wdq0.onrender.com/api" });
 
 // Attach JWT token
 API.interceptors.request.use((config) => {
