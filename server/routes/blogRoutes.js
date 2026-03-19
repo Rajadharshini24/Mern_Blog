@@ -25,6 +25,9 @@ router.post("/", verifyToken, upload.single("image"), createBlog);
 // Get all blogs (with pagination and search)
 router.get("/", getAllBlog);
 
+// Like / Unlike blog
+router.put("/like/:id", verifyToken, likeBlog);
+
 // Get single blog by ID
 router.get("/:id", getSingleBlog);
 
@@ -34,7 +37,6 @@ router.put("/:id", verifyToken, upload.single("image"), updateBlog);
 // Delete blog by ID
 router.delete("/:id", verifyToken, deleteBlog);
 
-// Like / Unlike blog
-router.put("/like/:id", verifyToken, likeBlog);
+
 
 module.exports = router;
