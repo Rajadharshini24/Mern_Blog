@@ -6,15 +6,19 @@ require("dotenv").config();
 const app=express();
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 const authRoutes=require("./routes/authRoutes");
 const blogRoutes=require("./routes/blogRoutes");
 const commentRoutes=require("./routes/commentRoutes");
+const profileRoutes = require("./routes/profileRoutes");
+
 
 //testing
 app.use('/api/auth',authRoutes);
 app.use('/api/blog',blogRoutes);
 app.use('/api/comments',commentRoutes);
+app.use("/api/profile", profileRoutes);
 
 
 //db connection

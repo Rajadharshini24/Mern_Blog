@@ -24,6 +24,7 @@ const userSchema=new mongoose.Schema(
             enum:["user","admin"],
             default:"user"
         },
+        
         profileImage:{
             type:String,
             default:""
@@ -32,19 +33,22 @@ const userSchema=new mongoose.Schema(
     {timestamps:true} 
 );
 
-userSchema.pre("save",async function(){
-    if(!this.isModified("password")) return next();
-    try{
-        const salt=await bcrypt.genSalt(10);
-        this.password=await bcrypt.hash(this.password,salt);
-        console.log("Password hashed successfully");   
-    }catch(err){
-        console.log(err);
-    }
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return; // just return
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    console.log("Password hashed successfully");
+  } catch (err) {
+    console.log(err);
+    throw err; // let Mongoose handle the error
+  }
 });
 
-userSchema.methods.comparePassword= async function(plainPassword){
-    return bcrypt.compare(plainPassword,this.password);
-} 
+// Compare password method
+userSchema.methods.comparePassword = async function (plainPassword) {
+  return bcrypt.compare(plainPassword, this.password);
+};
 
-module.exports=mongoose.model("User",userSchema);
+module.exports = mongoose.model("User", userSchema);

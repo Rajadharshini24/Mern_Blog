@@ -17,6 +17,8 @@ exports.register=async(req,res)=>{
     }
 }
 
+
+
 exports.login=async(req,res)=>{
     try{
         const{email,password}=req.body;
@@ -33,7 +35,12 @@ exports.login=async(req,res)=>{
             process.env.JWT_SECRET,
             {expiresIn:"1d"}
         );
-        res.status(201).json({message:"login successful",token});
+        res.status(201).json({message:"login successful",token,user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }});
 
     }
     catch(err){
