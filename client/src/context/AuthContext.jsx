@@ -6,9 +6,7 @@ const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
 
@@ -18,22 +16,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      // 1️⃣ Load user from localStorage for instant UI render
-      const savedUser = localStorage.getItem("user");
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
-      }
-
-      // 2️⃣ Fetch fresh user from backend
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) {
+        setUser(null);
         setLoading(false);
         return;
       }
 
       try {
         const res = await getProfile();
-        const freshUser = res.data.user || res.data; // adjust depending on your API
+        const freshUser = res.data.user;
         setUser(freshUser);
         localStorage.setItem("user", JSON.stringify(freshUser));
       } catch (err) {
@@ -41,9 +34,9 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         setUser(null);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     initAuth();
