@@ -51,19 +51,30 @@ const PostDetails = () => {
 
 
 
-  const handleLike = async (id, liked, setLiked) => {
-  // Update UI immediately
-  setLiked(!liked);
+  const handleLike = async (id) => {
+  if (!user) {
+    toast.error("Please login to like");
+    return;
+  }
 
-  // Show toast immediately
-  toast.success(!liked ? "Liked!" : "Unliked!");
+  setLikeLoading(true);
+
+  const newLiked = !liked;
+
+  // Optimistic UI update
+  setLiked(newLiked);
+  setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
 
   try {
-    await likeBlog(id); // call backend
+    await likeBlog(id);
+    toast.success(newLiked ? "Liked!" : "Unliked!");
   } catch (err) {
-    // Revert UI if API fails
-    setLiked(liked);
+    // revert
+    setLiked(!newLiked);
+    setLikesCount((prev) => (newLiked ? prev - 1 : prev + 1));
     toast.error("Failed to update like");
+  } finally {
+    setLikeLoading(false);
   }
 };
 
@@ -184,8 +195,8 @@ const isAuthor = blog?.author?._id === currentUserId;
         {/* Like Bar */}
         <div className="flex items-center justify-between py-6 mb-8 border-t border-b border-gray-200">
           <button
-            onClick={handleLike}
-            disabled={likeLoading}
+  onClick={() => handleLike(blog._id)}
+  disabled={likeLoading}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium cursor-pointer disabled:opacity-60 transition-all ${
               liked
                 ? "bg-red-50 border border-red-200 text-red-500"
