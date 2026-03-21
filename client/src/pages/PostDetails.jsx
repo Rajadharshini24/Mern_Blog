@@ -52,6 +52,8 @@ const PostDetails = () => {
 
 
   const handleLike = async (id) => {
+    console.log("likeBlog:", likeBlog);
+console.log("type:", typeof likeBlog);
   if (!user) {
     toast.error("Please login to like");
     return;
