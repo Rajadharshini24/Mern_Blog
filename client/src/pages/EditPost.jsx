@@ -31,6 +31,8 @@ const EditPost = () => {
   const [image, setImage] = useState(null); // existing image URL or filename
   const [newImage, setNewImage] = useState(null); // preview for uploaded image
 
+
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -155,7 +157,17 @@ const EditPost = () => {
         {/* IMAGE PREVIEW */}
         {(newImage || image) && (
   <img
-    src={newImage ? URL.createObjectURL(newImage) : `https://mern-blog-backend-wdq0.onrender.com${image}`}
+    src={
+      newImage
+        ? URL.createObjectURL(newImage)
+        : image?.startsWith("http://") || image?.startsWith("https://")
+        ? image
+        : image?.startsWith("https//")
+        ? image.replace("https//", "https://")
+        : image?.startsWith("/uploads")
+        ? `https://mern-blog-backend-wdq0.onrender.com${image}`
+        : "https://source.unsplash.com/800x400/?blog"
+    }
     alt="Blog"
     className="mb-4 w-full h-64 object-cover rounded-lg"
   />
