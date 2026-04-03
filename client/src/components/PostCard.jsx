@@ -9,6 +9,22 @@ const categoryColors = {
 };
 
 const PostCard = ({ blog, currentUserId, onDelete }) => {
+
+  const getImageUrl = (image) => {
+  if (!image) return "https://source.unsplash.com/400x300/?technology";
+
+  // Fix malformed https (your previous bug)
+  if (image.startsWith("https//")) {
+    image = image.replace("https//", "https://");
+  }
+
+  // Cloudinary or external
+  if (image.startsWith("http")) return image;
+
+  // Local uploads
+  return `https://mern-blog-backend-wdq0.onrender.com${image}`;
+};
+
   const formatDate = (dateStr) => {
     return new Date(dateStr).toLocaleDateString("en-US", {
       month: "short",
@@ -29,13 +45,7 @@ const PostCard = ({ blog, currentUserId, onDelete }) => {
       <Link to={`/blog/${blog._id}`}>
         <div className="overflow-hidden">
           <img
-            src={
-              blog.image
-                ? blog.image.startsWith("http")
-                  ? blog.image
-                  : `https://mern-blog-backend-wdq0.onrender.com${blog.image}`
-                : "https://source.unsplash.com/400x300/?technology"
-            }
+            src={getImageUrl(blog.image)}
             alt=""
             className="w-full h-48 object-cover group-hover:scale-105 transition duration-300"
           />
