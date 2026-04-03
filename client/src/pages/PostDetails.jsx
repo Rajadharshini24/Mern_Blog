@@ -129,11 +129,17 @@ const isAuthor = blog?.author?._id === currentUserId;
 
   {/* ✅ ADD IMAGE HERE */}
   {blog.image && (
-    <img
-      src={`https://mern-blog-backend-wdq0.onrender.com${blog.image}`}
-      className="w-full h-64 object-cover rounded-xl mb-6"
-    />
-  )}
+  <img
+    src={
+      blog.image.startsWith("http")
+        ? blog.image
+        : blog.image.startsWith("https//")
+        ? blog.image.replace("https//", "https://")
+        : `https://mern-blog-backend-wdq0.onrender.com${blog.image}`
+    }
+    className="w-full h-64 object-cover rounded-xl mb-6"
+  />
+)}
 
   {/* Category + Date */}
   <div className="flex flex-wrap items-center gap-3 mb-4">
