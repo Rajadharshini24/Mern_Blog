@@ -9,6 +9,7 @@ const categoryColors = {
 };
 
 const PostCard = ({ blog, currentUserId, onDelete }) => {
+  console.log("FULL BLOG:", blog);
   const getImageUrl = (image) => {
     if (!image) return "https://source.unsplash.com/400x300/?technology";
 
@@ -47,7 +48,7 @@ const PostCard = ({ blog, currentUserId, onDelete }) => {
       <Link to={`/blog/${blog._id}`}>
         <div className="overflow-hidden">
           <img
-            src={blog.image}
+            src={getImageUrl(blog.image)}
             alt="blog"
             className="w-full h-48 object-cover"
           />
