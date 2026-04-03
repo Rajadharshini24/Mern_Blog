@@ -13,16 +13,23 @@ const PostCard = ({ blog, currentUserId, onDelete }) => {
   const getImageUrl = (image) => {
   if (!image) return "https://source.unsplash.com/400x300/?technology";
 
-  // Fix malformed https (your previous bug)
-  if (image.startsWith("https//")) {
-    image = image.replace("https//", "https://");
+  // 🔥 Fix malformed Cloudinary URLs
+  if (image.includes("res.cloudinary.com")) {
+    if (image.startsWith("https//")) {
+      return image.replace("https//", "https://");
+    }
+    if (!image.startsWith("http")) {
+      return `https://${image}`;
+    }
+    return image;
   }
 
-  // Cloudinary or external
-  if (image.startsWith("http")) return image;
-
   // Local uploads
-  return `https://mern-blog-backend-wdq0.onrender.com${image}`;
+  if (image.startsWith("/uploads")) {
+    return `https://mern-blog-backend-wdq0.onrender.com${image}`;
+  }
+
+  return image;
 };
 
   const formatDate = (dateStr) => {
