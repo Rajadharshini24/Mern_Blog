@@ -47,7 +47,7 @@ const PostCard = ({ blog, currentUserId, onDelete }) => {
       <Link to={`/blog/${blog._id}`}>
         <div className="overflow-hidden">
           <img
-            src={getImageUrl(blog.image)}
+            src={blog.image}
             alt="blog"
             className="w-full h-48 object-cover"
           />
