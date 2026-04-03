@@ -132,7 +132,9 @@ const Home = () => {
                     <div className="relative">
                       <img
   src={
-    blog.image
+    blog.image?.startsWith("http")
+      ? blog.image
+      : blog.image
       ? `https://mern-blog-backend-wdq0.onrender.com${blog.image}`
       : "https://source.unsplash.com/400x250/?technology"
   }
