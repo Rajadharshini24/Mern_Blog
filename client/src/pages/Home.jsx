@@ -134,6 +134,8 @@ const Home = () => {
   src={
     blog.image?.startsWith("http")
       ? blog.image
+      : blog.image?.startsWith("https//")
+      ? blog.image.replace("https//", "https://")
       : blog.image
       ? `https://mern-blog-backend-wdq0.onrender.com${blog.image}`
       : "https://source.unsplash.com/400x250/?technology"
